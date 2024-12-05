@@ -1,5 +1,3 @@
-### Source code frontend khóa học Nest.JS
-Tác giả: Hỏi Dân IT
 
 Các bước cài đặt: (chế độ development)
 1. clone code
