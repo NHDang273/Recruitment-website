@@ -1,8 +1,8 @@
 {
-  "name": "nest-basic-hoidanit",
+  "name": "recruitment-website",
   "version": "0.0.1",
-  "description": "https://hoidanit.com.vn/",
-  "author": "Hỏi Dân IT",
+  "description": "Recruitment Website",
+  "author": "Dang",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
