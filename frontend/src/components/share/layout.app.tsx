@@ -1,34 +1,40 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setRefreshTokenAction } from "@/redux/slice/accountSlide";
-import { message } from "antd";
-import { useEffect } from "react";
+import { message, Spin } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface IProps {
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
 const LayoutApp = (props: IProps) => {
+    const [loading, setLoading] = useState<boolean>(true); // Add loading state
     const isRefreshToken = useAppSelector(state => state.account.isRefreshToken);
     const errorRefreshToken = useAppSelector(state => state.account.errorRefreshToken);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    //handle refresh token error
     useEffect(() => {
         if (isRefreshToken === true) {
-            localStorage.removeItem('access_token')
+            localStorage.removeItem('access_token');
             message.error(errorRefreshToken);
-            dispatch(setRefreshTokenAction({ status: false, message: "" }))
+            dispatch(setRefreshTokenAction({ status: false, message: "" }));
             navigate('/login');
+        } else {
+            setLoading(false); // If no error, stop loading
         }
-    }, [isRefreshToken]);
+    }, [isRefreshToken, errorRefreshToken, dispatch, navigate]);
 
     return (
         <>
-            {props.children}
+            {loading ? (
+                <Spin tip="Loading..." size="large" /> // Show loading spinner until token check is done
+            ) : (
+                props.children
+            )}
         </>
-    )
-}
+    );
+};
 
 export default LayoutApp;

@@ -7,14 +7,40 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
+import path from 'path';
+import fs from 'fs';
+import axios from 'axios';
+import FormData from 'form-data';
+import chokidar from 'chokidar';
 
 @Injectable()
 export class ResumesService {
+  private resumesFolderPath = path.join(__dirname, '..', '..', 'public', 'images', 'resume');
+  private watcher: chokidar.FSWatcher;
 
   constructor(
     @InjectModel(Resume.name)
     private resumeModel: SoftDeleteModel<ResumeDocument>
-  ) { }
+  ) {
+    // Initialize the file watcher
+    this.watcher = chokidar.watch(this.resumesFolderPath, {
+      ignored: /^\./,
+      persistent: true
+    });
+
+    // Set up event listeners for file changes
+    this.watcher.on('add', (filePath) => this.onFileChange(filePath));
+    this.watcher.on('change', (filePath) => this.onFileChange(filePath));
+  }
+
+  // Method that will be triggered on file changes
+  private async onFileChange(filePath: string) {
+    if (filePath.endsWith('.pdf')) {
+      console.log(`File changed: ${filePath}`);
+      await this.sendAllPdfsToFastApi();
+    }
+  }
+
   async create(createUserCvDto: CreateUserCvDto, user: IUser) {
     const { url, companyId, jobId } = createUserCvDto;
     const { email, _id } = user;
@@ -34,7 +60,7 @@ export class ResumesService {
           }
         }
       ]
-    })
+    });
 
     return {
       _id: newCV?._id,
@@ -53,7 +79,6 @@ export class ResumesService {
     const totalItems = (await this.resumeModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-
     const result = await this.resumeModel.find(filter)
       .skip(offset)
       .limit(defaultLimit)
@@ -64,22 +89,23 @@ export class ResumesService {
 
     return {
       meta: {
-        current: currentPage, //trang hiện tại
-        pageSize: limit, //số lượng bản ghi đã lấy
-        pages: totalPages,  //tổng số trang với điều kiện query
-        total: totalItems // tổng số phần tử (số bản ghi)
+        current: currentPage,
+        pageSize: limit,
+        pages: totalPages,
+        total: totalItems
       },
-      result //kết quả query
-    }
+      result
+    };
   }
 
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestException("not found resume")
+      throw new BadRequestException("not found resume");
     }
 
     return await this.resumeModel.findById(id);
   }
+
   async findByUsers(user: IUser) {
     return await this.resumeModel.find({
       userId: user._id,
@@ -94,12 +120,12 @@ export class ResumesService {
           path: "jobId",
           select: { name: 1 }
         }
-      ])
+      ]);
   }
 
   async update(_id: string, status: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw new BadRequestException("not found resume")
+      throw new BadRequestException("not found resume");
     }
 
     const updated = await this.resumeModel.updateOne(
@@ -113,7 +139,7 @@ export class ResumesService {
         $push: {
           history: {
             status: status,
-            updatedAt: new Date,
+            updatedAt: new Date(),
             updatedBy: {
               _id: user._id,
               email: user.email
@@ -133,9 +159,38 @@ export class ResumesService {
           _id: user._id,
           email: user.email
         }
-      })
+      });
     return this.resumeModel.softDelete({
       _id: id
-    })
+    });
+  }
+
+  /**
+   * Gửi tất cả file PDF từ folder resumesFolderPath đến FastAPI
+   */
+  async sendAllPdfsToFastApi(): Promise<void> {
+    if (!fs.existsSync(this.resumesFolderPath)) {
+      fs.mkdirSync(this.resumesFolderPath, { recursive: true });
+    }
+
+    const files = fs.readdirSync(this.resumesFolderPath).filter((file) => file.endsWith('.pdf'));
+
+    for (const file of files) {
+      const filePath = path.join(this.resumesFolderPath, file);
+
+      const formData = new FormData();
+      formData.append('file', fs.createReadStream(filePath));
+
+      try {
+        const response = await axios.post('http://localhost:8000/api/upload_pdf', formData, {
+          headers: {
+            ...formData.getHeaders(),
+          },
+        });
+        console.log(`Uploaded ${file} successfully:`, response.data);
+      } catch (error) {
+        console.error(`Failed to upload ${file}:`, error.message);
+      }
+    }
   }
 }

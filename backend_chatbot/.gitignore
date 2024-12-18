@@ -1,0 +1,36 @@
+# Python bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Thư mục ảo (virtual environment)
+venv/
+
+
+# File log
+*.log
+
+# Thư mục chứa cache của IDE
+.idea/
+.vscode/
+
+# Các file hệ thống tự động tạo
+.DS_Store
+Thumbs.db
+
+# File chứa khóa bí mật hoặc thông tin nhạy cảm
+*.key
+*.pem
+
+# Các file database (ví dụ MongoDB, SQLite)
+*.sqlite3
+*.db
+
+# File test
+test_*.py
+
+# Models file
+/models
+
+.env

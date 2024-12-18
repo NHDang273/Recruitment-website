@@ -9,8 +9,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { callLogout } from '@/config/api';
+import { FaRobot } from 'react-icons/fa';
 import { setLogoutAction } from '@/redux/slice/accountSlide';
 import ManageAccount from './modal/manage.account';
+import Logo from '@/assets/logo.svg';
+
 
 const Header = (props: any) => {
     const navigate = useNavigate();
@@ -44,6 +47,11 @@ const Header = (props: any) => {
             label: <Link to={'/company'}>Top Công ty IT</Link>,
             key: '/company',
             icon: <RiseOutlined />,
+        },
+        {
+            label: <Link to={'/chatbot'}>Chatbot</Link>,
+            key: '/chatbot',
+            icon: <FaRobot />, 
         }
     ];
 
@@ -97,7 +105,12 @@ const Header = (props: any) => {
                     {!isMobile ?
                         <div style={{ display: "flex", gap: 30 }}>
                             <div className={styles['brand']} >
-                                <FaReact onClick={() => navigate('/')} title='Hỏi Dân IT' />
+                                <img
+                                    src={Logo}
+                                    alt="logo"
+                                    style={{ width: 24, height: 24 }}
+                                    onClick={() => navigate('/')} title="Trang chủ"
+                                />
                             </div>
                             <div className={styles['top-menu']}>
                                 <ConfigProvider

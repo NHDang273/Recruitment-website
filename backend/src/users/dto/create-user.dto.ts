@@ -69,7 +69,7 @@ export class RegisterUserDto {
 export class UserLoginDto {
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({ example: 'hoidanit', description: 'username' })
+    @ApiProperty({ example: 'danguit', description: 'username' })
     readonly username: string;
 
     @IsString()

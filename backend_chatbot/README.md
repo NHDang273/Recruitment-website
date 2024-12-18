@@ -1,6 +1,6 @@
-# Chatbot API with FastAPI
+# Chatbot API with FastAPI and MongoDB
 
-This project is a simple backend implementation for a chatbot using **FastAPI** and **OpenAI's GPT model**.
+This project is a simple backend implementation for a chatbot using **FastAPI**, **MongoDB**, and **OpenAI's GPT model**.
 
 ## Prerequisites
 
@@ -8,14 +8,18 @@ Before running the project, ensure you have the following installed:
 
 - **Python 3.7+**
 - **pip** (Python package manager)
+- **MongoDB** (For local development or MongoDB Atlas for cloud-based database)
 
 ## Setup
 
 1. **Clone the repository**:
     ```bash
     git clone <repository_url>
-    cd chatbot_backend
+    cd Backend-RAG-Chatbot
     ```
+
+1. **Create Models folder**:
+    Download model llama-2-7b-chat.Q2_K.gguf from https://huggingface.co/transformers/model_doc/gpt2.html into models folder
 
 2. **Create a virtual environment**:
     ```bash
@@ -42,17 +46,15 @@ Before running the project, ensure you have the following installed:
     pip freeze > requirements.txt
     ```
 
-5. **Set up OpenAI API key**:
-    - Sign up for an [OpenAI API key](https://platform.openai.com/signup) if you don’t have one.
-    - Set your OpenAI API key as an environment variable:
-      - On **Windows**:
-        ```bash
-        set OPENAI_API_KEY=your_openai_api_key
-        ```
-      - On **Mac/Linux**:
-        ```bash
-        export OPENAI_API_KEY=your_openai_api_key
-        ```
+5. **Set up environment variables**:
+    Create a `.env` file in the root directory and add the following variables:
+
+    ```bash
+    MONGO_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<your_database_name>
+    MONGO_DB_NAME=<your_database_name>
+    ```
+
+    Replace `<username>`, `<password>`, and `<your_database_name>` with your actual MongoDB credentials and database name.
 
 ## Running the Project
 

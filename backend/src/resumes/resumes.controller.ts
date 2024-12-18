@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { ResumesService } from './resumes.service';
 import { CreateUserCvDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
-import { ResponseMessage, User } from 'src/decorator/customize';
+import { Public, ResponseMessage, User } from 'src/decorator/customize';
 import { IUser } from 'src/users/users.interface';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -11,6 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) { }
 
+  
   @Post()
   @ResponseMessage("Create a new resume")
   create(@Body() createUserCvDto: CreateUserCvDto, @User() user: IUser) {
@@ -21,6 +22,13 @@ export class ResumesController {
   @ResponseMessage("Get Resumes by User")
   getResumesByUser(@User() user: IUser) {
     return this.resumesService.findByUsers(user);
+  }
+
+  @Public()
+  @Post('send-pdfs')
+  async sendAllPdfs(): Promise<string> {
+    await this.resumesService.sendAllPdfsToFastApi();
+    return 'All PDF files have been sent to FastAPI!';
   }
 
   @Get()

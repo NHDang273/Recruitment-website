@@ -90,6 +90,12 @@
             margin-top: 7px;
             animation: spin 20s linear infinite;
         }
+        img {
+            cursor: pointer;
+            width: 20px;
+            margin-top: 8px;
+            animation: spin 20s linear infinite;
+        }
     }
 
     .top-menu {
@@ -173,8 +179,9 @@
                     transition: .2s all;
                     font-size: 17px;
                     display: -webkit-box;
-                    -webkit-line-clamp: 2;
+                    -webkit-line-clamp: 2; 
                     -webkit-box-orient: vertical;
+                    line-clamp: 2; 
                 }
 
                 .job-location {
@@ -199,6 +206,18 @@
             height: 200px;
             width: 200px;
             margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9; /* Màu nền nếu cần */
+            overflow: hidden; /* Đảm bảo không có phần dư ra ngoài */
+        }
+
+        .card-customize img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Đảm bảo logo không bị cắt */
+            object-position: center; /* Căn giữa logo */
         }
     }
 

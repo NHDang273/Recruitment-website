@@ -21,7 +21,7 @@ services:
     environment:
       - PORT=8080
       - NODE_ENV=production
-      - MONGO_URL=mongodb://root:123456@db-mongo:27017/hoidanit?authSource=admin
+      - MONGO_URL=mongodb+srv://dvdangvip9:tfpFxKzCAQ43XMR7@cluster0.cw7pi.mongodb.net/test0
       # - DB_HOST=host.docker.internal
     expose:
       - 8080
@@ -30,5 +30,3 @@ services:
 
 volumes:
   mongodb:
-
-    # docker compose -p hoidanit-nest up -d

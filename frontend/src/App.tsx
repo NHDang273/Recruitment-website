@@ -15,7 +15,7 @@ import ProtectedRoute from 'components/share/protected-route.ts';
 import Header from 'components/client/header.client';
 import Footer from 'components/client/footer.client';
 import HomePage from 'pages/home';
-import styles from 'styles/app.module.scss';
+import styles from 'styles/app.module.scss';  
 import DashboardPage from './pages/admin/dashboard';
 import CompanyPage from './pages/admin/company';
 import PermissionPage from './pages/admin/permission';
@@ -30,6 +30,7 @@ import ClientJobPage from './pages/job';
 import ClientJobDetailPage from './pages/job/detail';
 import ClientCompanyPage from './pages/company';
 import ClientCompanyDetailPage from './pages/company/detail';
+import ChatbotPage from 'pages/chatbot/chatbot';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,7 +79,8 @@ export default function App() {
         { path: "job", element: <ClientJobPage /> },
         { path: "job/:id", element: <ClientJobDetailPage /> },
         { path: "company", element: <ClientCompanyPage /> },
-        { path: "company/:id", element: <ClientCompanyDetailPage /> }
+        { path: "company/:id", element: <ClientCompanyDetailPage /> },
+        { path: "chatbot", element: <ChatbotPage /> }
       ],
     },
 
